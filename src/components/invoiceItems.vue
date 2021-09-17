@@ -6,8 +6,8 @@
     <span class="p-1 w-[100px]">Toplam</span>
   </div>
   <div class="table-body">
-      <InvoiceItem />
-    <button class="mt-4 add-item-button">
+      <InvoiceItem v-for="item in items" :key="item.id" :item="item" />
+    <button class="mt-4 add-item-button" @click="AddInvoiceItem">
       <svg
         class="fill-current"
         xmlns="http://www.w3.org/2000/svg"
@@ -24,4 +24,5 @@
 </template>
 <script setup>
 import InvoiceItem from './invoiceItem.vue';
+defineProps({items:Array, AddInvoiceItem:Function})
 </script>

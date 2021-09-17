@@ -1,36 +1,12 @@
 <template>
     <section class="bg-gray-900 w-1/3 mx-auto mt-10 p-2 px-5 rounded-md shadow-2xl">
       <!-- FAtura Bilgileri -->
-      <div>
           <AppHeading title="FaturaBilgileri" />        
-        <label for="client_name" class="flex flex-col text-gray-400 mb-2">
-          <small class="mb-1">Müşteri Adı</small>
-          <input autocomplete="off" id="client_name" class="input" type="text" />
-        </label>
-        <label for="client_email" class="flex flex-col text-gray-400 mb-2">
-          <small class="mb-1">E-posta</small>
-          <input autocomplete="off" id="client_email" class="input" type="email" />
-        </label>
-
-        <div class="grid grid-cols-3 gap-5">
-          <label for="city" class="flex flex-col text-gray-400 mb-2">
-            <small class="mb-1">Şehir</small>
-            <input autocomplete="off" id="city" class="input" type="text" />
-          </label>
-          <label for="zip_code" class="flex flex-col text-gray-400 mb-2">
-            <small class="mb-1">Posta Kodu</small>
-            <input autocomplete="off" id="zip_code" class="input" type="text" />
-          </label>
-          <label for="country" class="flex flex-col text-gray-400 mb-2">
-            <small class="mb-1">Ülke</small>
-            <input autocomplete="off" id="country" class="input" type="text" />
-          </label>
-        </div>
-      </div>
-
+      <ContactSection :contact="state.contact" />
+          {{state.contact}}
       <div class="mt-5">
           <AppHeading title="Fatura Kalemleri"/>            
-            <InvoiceItems />
+            <InvoiceItems :items="state.items" :AddInvoiceItem="AddInvoiceItem"/>
       </div>
       <!-- Summary -->
             <InvoiceSummary />
@@ -44,7 +20,31 @@
 </template>
 
 <script setup>
+import ContactSection from './ContactSection.vue';
 import AppHeading from './ui/appHeading.vue';
 import InvoiceItems from './invoiceItems.vue';
 import InvoiceSummary from './invoiceSummary.vue';
+
+import { reactive } from '@vue/reactivity';
+const state = reactive({
+  contact:{
+    name:null,
+    email:null,
+    city:null,
+    country:null,
+    zipcode:null,
+  },
+    items:[],
+  
+})
+const AddInvoiceItem = () => {
+  state.items.push({
+    name:null,
+    qty:null,
+    unit_price:0,
+    total_price:0.0,
+  })
+}
+
+
 </script>

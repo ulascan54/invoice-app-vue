@@ -1,9 +1,9 @@
 <template>
-    <div v-for="i in 5" :key="i" class="table-body-item group">
-      <input autocomplete="off" type="text" class="input w-[200px] mr-2" />
-      <input autocomplete="off" type="text" class="input w-[50px] mr-2" />
-      <input autocomplete="off" type="text" class="input w-[100px] mr-2" />
-      <span class="p-1 text-center text-gray-400">$1500</span>
+    <div class="table-body-item group">
+      <input autocomplete="off" v-model="item.name" type="text" class="input w-[200px] mr-2" />
+      <input autocomplete="off" v-model="item.qty" type="text" class="input w-[50px] mr-2" />
+      <input autocomplete="off" v-model="item.unit_price" type="text" class="input w-[100px] mr-2" />
+      <span class="p-1 text-center text-gray-400">${{totalPrice}}</span>
       <div class="text-right flex-grow">
         <button class="delete-button">
           <svg
@@ -22,3 +22,9 @@
       </div>
     </div>
 </template>
+<script setup>
+import { computed } from "@vue/reactivity";
+
+const props =  defineProps({item:Object})
+const totalPrice = computed(()=> props.item.qty * props.item.unit_price)
+</script>
