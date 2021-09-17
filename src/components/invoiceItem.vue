@@ -1,10 +1,10 @@
 <template>
-    <div class="table-body-item group">
-      <input autocomplete="off" v-model="item.name" type="text" class="input w-[200px] mr-2" />
-      <input autocomplete="off" v-model="item.qty" type="text" class="input w-[50px] mr-2" />
-      <input autocomplete="off" v-model="item.unit_price" type="text" class="input w-[100px] mr-2" />
-      <span class="p-1 text-center text-gray-400">${{item.total_price}}</span>
-      <div class="text-right flex-grow">
+    <div class="table-body-item group w-full">
+      <input autocomplete="off" v-model="item.name" type="text" class="input w-4/12 mr-2" />
+      <input autocomplete="off" v-model="item.qty" type="text" class="input w-2/12 mr-2" />
+      <input autocomplete="off" v-model="item.unit_price" type="text" class="input w-2/12 mr-2" />
+      <span class="p-1 text-center text-gray-400 w-3/12 overflow-hidden">${{item.total_price}}</span>
+      <div class="text-right w-1/12">
         <button class="delete-button" @click="DeleteInvoiceItem(item)">
           <svg
             xmlns="http://www.w3.org/2000/svg"

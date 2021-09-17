@@ -1,9 +1,9 @@
 <template>
   <div class="table-header flex">
-    <span class="text-left p-1 w-[200px] mr-2">Ürün Adı</span>
-    <span class="text-left p-1 w-[50px] mr-2">Adet</span>
-    <span class="text-left p-1 w-[100px] mr-2">Fiyat</span>
-    <span class="p-1 w-[100px]">Toplam</span>
+    <span class="text-left p-1 w-4/12 mr-2">Ürün Adı</span>
+    <span class="text-left p-1 w-2/12 mr-2">Adet</span>
+    <span class="text-left p-1 w-2/12 mr-2">Fiyat</span>
+    <span class="p-1 w-4/12">Toplam</span>
   </div>
   <div class="table-body">
       <InvoiceItem v-for="item in items" :key="item.id" :item="item" />

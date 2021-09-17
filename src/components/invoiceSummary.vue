@@ -1,5 +1,5 @@
 <template>
-      <div class="summary mt-5 flex justify-end items-end">
+      <div class="summary mt-5 flex justify-end items-end overflow-hidden">
         <div class="text-right mr-2">
           <div class="text-gray-500">Ara Toplam :</div>
           <div class="text-gray-400">KDV Toplam :</div>
