@@ -11,9 +11,13 @@
             <InvoiceSummary :items="state.items" />
 
 
-      <hr class="bg-gradient-to-r h-[1px] border-none from-gray-700 mt-5" />
-      <div class="actionbar text-right my-5">
+      <hr  class="bg-gradient-to-r h-[1px] border-none from-gray-700 mt-5" />
+      <div v-if="detailsStatus" class="actionbar text-right my-5">
         <button class="purple-button" @click="onSubmit">Kaydet</button>
+      </div>
+      <div v-else  class="actionbar text-right my-5">
+        <button class="purple-button bg-red-700 hover:bg-red-900 mr-3" @click="clearBoard">Vazgeç</button>
+        <button class="purple-button" @click="updateInvoice">Güncelle</button>
       </div>
     </section>
 </template>
@@ -25,7 +29,9 @@ import InvoiceItems from './invoiceItems.vue';
 import InvoiceSummary from './invoiceSummary.vue';
 import { provide, watch } from "@vue/runtime-core";
 import { reactive} from '@vue/reactivity';
-const props = defineProps({saveInvoice:Function,activeInvoice:[Object,null]})
+import db from '../boot/firebase'
+const props = defineProps({activeInvoice:[Object,null],detailsStatus:Boolean})
+const emit=defineEmits()
 const state = reactive({
   contact:{
     name:null,
@@ -35,6 +41,8 @@ const state = reactive({
     zipcode:null,
   },
     items:[],
+    created_at:null,
+    id:null,
   
 })
 const AddInvoiceItem = () => {
@@ -50,9 +58,29 @@ const AddInvoiceItem = () => {
 const DeleteInvoiceItem = (invoiceItem)=>{
     state.items=state.items.filter(f=>f.id !== invoiceItem.id)
 }
+
+const clearBoard=()=>{
+    state.contact= {
+    name:null,
+    email:null,
+    city:null,
+    country:null,
+    zipcode:null,
+  }
+  state.items=[],
+  state.created_at=null
+  emit('status')
+}
+
 provide('DeleteInvoiceItem',DeleteInvoiceItem)
 const onSubmit = ()=>{
-  props.saveInvoice({...state, created_at: new Date().getTime(), id: new Date().getTime()})
+  db.collection('invoices')
+    .add({...state, created_at: new Date().getTime()})
+    .then((docRef)=>{
+      console.log('Database e yazdırma işlemi tamamlandı' ,docRef.id)
+    })
+    .catch((err)=>console.error("Database e yazdırma işlemi hatalı",err))
+
   state.contact= {
     name:null,
     email:null,
@@ -60,9 +88,18 @@ const onSubmit = ()=>{
     country:null,
     zipcode:null,
   }
-  state.items=[]
+  state.items=[],
+  state.created_at=null
+
 }
-  console.log(props.activeInvoice);
+const updateInvoice =()=>{
+  db.collection("invoices").doc(state.id)
+    .update({
+      contact: {...state.contact}, 
+      items:{...state.items}
+      });
+      clearBoard()
+}
 
 watch(()=>props.activeInvoice,(activeInvoice)=>{
       if (activeInvoice!==null) {
@@ -70,6 +107,8 @@ watch(()=>props.activeInvoice,(activeInvoice)=>{
           ...activeInvoice.contact
         }
         state.items=[...activeInvoice.items]
+        state.created_at=activeInvoice.created_at
+        state.id=activeInvoice.id
       }
 })
 </script>

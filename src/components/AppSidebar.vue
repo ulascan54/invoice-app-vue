@@ -1,8 +1,8 @@
 <template>
       <aside class="bg-gray-700 w-[300px] h-screen">
       <h3 class="text-2xl font-bold mt-2 p-2">Fatura Listesi</h3>
-      <div v-for="invoice in invoices" :key="invoice.id" class="odd:bg-gray-600 flex justify-between items-center p-2">
-        <span>{{invoice.id}}</span>
+      <div v-for="(invoice,i) in items" :key="invoice.id" class="odd:bg-gray-600 flex justify-between items-center p-2">
+        <span>{{i+1}}</span>
         <span>{{invoice.contact.name}}</span>
         <span>
           <button class="danger-button mr-1">
@@ -24,5 +24,39 @@
     </aside>
 </template>
 <script setup>
-defineProps({invoices:Array, invoiceDetails:Function})
+import { onMounted,ref} from 'vue'
+import db from "../boot/firebase";
+
+defineProps({invoices:Array , invoiceDetails:Function})
+const items = ref([])
+onMounted(()=>{
+  db.collection("invoices")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          let newInvoice = change.doc.data();
+          newInvoice.id = change.doc.id;
+          if (change.type === "added") {
+            console.log("New invoice: ", newInvoice);
+            items.value.push(newInvoice);
+          }
+          if (change.type === "modified") {
+            console.log("Modified invoice: ", newInvoice);
+            let index = items.value.findIndex(
+              (invoice) => invoice.id === newInvoice.id
+            );
+            Object.assign(items.value[index], newInvoice);
+          }
+          if (change.type === "removed") {
+            console.log("Removed invoice: ", newInvoice);
+            let index = items.value.findIndex(
+              (invoice) => invoice.id === newInvoice.id
+            );
+            items.value.splice(index, 1);
+          }
+        });
+      });
+      console.log(items.value);
+})
+  
+
 </script>
