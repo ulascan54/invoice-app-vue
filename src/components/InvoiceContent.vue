@@ -9,7 +9,7 @@
             <InvoiceItems :items="state.items" :AddInvoiceItem="AddInvoiceItem"/>
       </div>
       <!-- Summary -->
-            <InvoiceSummary />
+            <InvoiceSummary :items="state.items" />
 
 
       <hr class="bg-gradient-to-r h-[1px] border-none from-gray-700 mt-5" />
@@ -24,7 +24,7 @@ import ContactSection from './ContactSection.vue';
 import AppHeading from './ui/appHeading.vue';
 import InvoiceItems from './invoiceItems.vue';
 import InvoiceSummary from './invoiceSummary.vue';
-
+import { provide } from "@vue/runtime-core";
 import { reactive } from '@vue/reactivity';
 const state = reactive({
   contact:{
@@ -39,6 +39,7 @@ const state = reactive({
 })
 const AddInvoiceItem = () => {
   state.items.push({
+    id: new Date().getTime(),
     name:null,
     qty:null,
     unit_price:0,
@@ -46,5 +47,8 @@ const AddInvoiceItem = () => {
   })
 }
 
-
+const DeleteInvoiceItem = (invoiceItem)=>{
+    state.items=state.items.filter(f=>f.id !== invoiceItem.id)
+}
+provide('DeleteInvoiceItem',DeleteInvoiceItem)
 </script>
